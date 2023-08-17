@@ -33,3 +33,13 @@ class User(db.Model):
             return user
         else:
             return False
+    
+    @classmethod
+    def check_for_existing_username(cls, username):
+        if User.query.filter_by(username=username).first():
+            return True
+
+    @classmethod
+    def check_for_existing_email(cls, email):
+        if User.query.filter_by(email=email).first():
+            return True

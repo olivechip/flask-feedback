@@ -34,13 +34,20 @@ def register():
         username = form.username.data
         password = form.password.data
         
-        user = User.register(username, password, email, first_name, last_name)
-        db.session.add(user)
-        db.session.commit()
+        if User.check_for_existing_username(username):
+            form.username.errors = ['Username already exists. Please use another username.']
+            return render_template('register.html', form=form)
+        elif User.check_for_existing_email(email):
+            form.email.errors = ['Email already exists. Please use another email.']
+            return render_template('register.html', form=form)
+        else:
+            user = User.register(username, password, email, first_name, last_name)
+            db.session.add(user)
+            db.session.commit()
 
-        session['user_id'] = user.id
-        flash('Welcome! Successfully created your account!')
-        return redirect('/secret')
+            session['user_id'] = user.id
+            flash(f'Welcome, {username}! Successfully created your account!')
+            return redirect('/secret')
 
     return render_template('register.html', form=form)
 
@@ -56,7 +63,7 @@ def login():
 
         if user:
             session['user_id'] = user.id
-            flash(f'Welcome back, {user.username}!')
+            flash(f'Welcome back, {username}!')
             return redirect('/secret')
         else: 
             form.username.errors = ['You have entered an invalid username or password.']
@@ -75,8 +82,9 @@ def secret():
 @app.route('/logout')
 def logout():
     try:
-        session.pop('user_id')
-        flash('Goodbye!')
-        return redirect('/')
+        if session['user_id']:
+            session.pop('user_id')
+            flash(f'Goodbye!')
+            return redirect('/')
     except:
         return redirect('/')
