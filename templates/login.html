@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Feedback - Login{% endblock %}
+
+{% block content %}
+<div>
+    <h1>Login</h1>
+    <div>Don't have an account? <span>Register <a href="/register">here</a></span>.</div>
+    <form method="POST" class="form-control">
+        {{ form.hidden_tag() }}
+
+        {% for field in form if field.widget.input_type != 'hidden' %}
+            <div>
+                {{ field.label }}
+                {{ field }}
+                <div>
+                    {% for error in field.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+            </div>        
+        {% endfor %}
+
+        <button>Login</button>
+    </form>    
+</div>
+{% endblock %}
