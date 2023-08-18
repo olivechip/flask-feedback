@@ -12,3 +12,7 @@ class RegisterUserForm(FlaskForm):
 class LoginUserForm(FlaskForm):
     username = StringField('Username', validators=[InputRequired(), Length(max=20)])
     password = PasswordField('Password', validators=[InputRequired()])
+
+class FeedbackForm(FlaskForm):
+    title = StringField('Title', validators=[InputRequired(), Length(max=30)])
+    content = StringField('Content', validators=[InputRequired()])
